@@ -18,7 +18,7 @@ custom_tab_styles = {
         'color': '#818181',
         'font-size': '18px',
         'transition': '.3s',
-        'white-space': 'nowrap',
+        'white-space': 'normal',
         'text-transform': 'uppercase'
     },
     'tabOptionsStyle': {
@@ -38,8 +38,8 @@ custom_tab_styles = {
 
 with st.sidebar:
     tabs = on_hover_tabs(
-        tabName=['Home Page', 'Predicton', 'User\'s Info'],
-        iconName=['dashboard', 'money', 'economy'],
+        tabName=['Home Page', 'Exploratory Data Analysis', 'About', 'Documentation'],
+        iconName=['dashboard', 'money', '', 'economy', ''],
         default_choice=0,
         styles=custom_tab_styles,
         key='1'
@@ -75,8 +75,14 @@ def questions():
     st.subheader('Preferred Communication Platform')
     selected_option = st.multiselect('Select all options that apply.', ['Email', 'University eLearning Chat Room',
                                                                         'Whatsapp', 'Call', 'Telegram', 'Others'])
-    responses_dict['Question'].append('Preferred Communication Platform')
-    responses_dict['Answer'].append(', '.join(selected_option))
+#     responses_dict['Question'].append('Preferred Communication Platform')
+#     responses_dict['Answer'].append(', '.join(selected_option))
+    if not selected_option:
+        st.error('Please select at least 1 option.')
+    else: 
+        responses_dict['Question'].append('Preferred Communication Platform')
+        responses_dict['Answer'].append(', '.join(selected_option))
+           
 #     for question, options in preference_questions.items():
 #         selected_option = st.multiselect(question, options)
 #         responses_dict['Question'].append(question)
@@ -148,9 +154,9 @@ def questions():
         responses_df = responses_df[1:]  # Skip the first row
         responses_df.drop(columns=['Question'], inplace=True, axis=1)
 
-        # Display the DataFrame
-        st.subheader('User Responses:')
-        st.write(responses_df)
+#         # Display the DataFrame
+#         st.subheader('User Responses:')
+#         st.write(responses_df)
         
         # Save into a new csv
         responses_df.to_csv('responses_st_dominantVAK.csv', index=False)
@@ -292,9 +298,9 @@ def get_dominant_vak(df):
     # Add the list of dominant learning style as a new column in the DataFrame
     df['Dominant_VAK'] = dominant_preference
     
-    # Display the DataFrame
-    st.subheader('Dominat VAK:')
-    st.write(df)
+#     # Display the DataFrame
+#     st.subheader('Dominat VAK:')
+#     st.write(df)
     
     return df
 
@@ -437,17 +443,16 @@ def classification_model(df):
     # Mark that the CSV file already exists
     st.session_state.csv_exists = True
     
-    # Display
-    st.dataframe(final_df)
+    # Display the content in a list
+    st.header("Best Online Assessment(s):")
+    for i, assessment in enumerate(final_df, start=1):
+        st.text(f"{i}. {assessment}")
+
 
 
 # Individual tabs
 if tabs =='Home Page':
-    st.title('Know your learning stle')
-    st.write('Name of option is {}'.format(tabs))
-
-elif tabs == 'Predicton':
-    st.title('Personalisation Questions')
+    st.title('Online Assessment(s) Personalisation')
     st.write('Fill in the questionnaire below:')
     responses_df = questions()
     # Check if the DataFrame is not None before performing other functions to ensure the questions() is being called first
@@ -460,7 +465,25 @@ elif tabs == 'Predicton':
             classification_model(responses_vak_df)
     
 
-elif tabs == 'User\'s Info':
-    st.title('Tom')
-    st.write('Name of option is {}'.format(tabs))
+elif tabs == 'Exploratory Data Analysis':
+    st.title('Graphs')
+    st.write('Visual elements')
+
+elif tabs == 'About':
+    st.title('Curious to know what is your learning style?')
+    
+    st.header('What is learning style?')
+    st.write('''Learning style influences how learners prefer to receive and process information. According to Dag and Gecer (2009), “Learning Style” refers to the learning ways or preferences which are used to learn or remember new knowledge by the learner. For example, visual learners may excel better in assessments that involve diagramming whereas auditory learners may excel better in oral assessments while kinesthetic learners may excel better in hands-on practicals.''')
+    
+    st.write("""Previous research by Sharp et al.,2008 has established that the VAK learning styles model is the most widely used among the learning style assessment instruments. The VAK learning style uses 3 main sensory receivers to determine a learner’s dominant learning style. They are:""")
+    numbered_list = ['Sight (Visual)', 'Hearing (Auditory)', 'Movement (Kinesthetic)']
+    for i, item in enumerate(numbered_list, start=1):
+        st.write(f"{i}. {item}")
+        
+    st.header('How do learning style relates to assessment?')
+    st.write("""A research by Wickramasinghe and Hettiarachchi, 2017 explored the relationship among students’ learning styles, assessment methods, and students’ performances. The study aims to identify the learning styles of students and observe how different assessment methods affect their performance. The survey results showed that there is a significant difference in the marks obtained in pre and post-assessments, suggesting that students perform better in assessment methods that align with their learning styles. The study concludes that there is a relationship between students’ learning styles, assessment methods, and their performances""")
+    
+elif tabs == 'Documentation':
+    st.title('Documentation')
+    st.write('Brief overview of each tab\'s content')
     
