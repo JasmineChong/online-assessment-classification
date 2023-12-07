@@ -14,7 +14,7 @@ st.markdown('<style>' + open('./style.css').read() + '</style>', unsafe_allow_ht
 # Define custom styles for tabs, including active tab style
 custom_tab_styles = {
     'navtab': {
-        'background-color': '#111',
+        'background-color': '#01427a',
         'color': '#818181',
         'font-size': '18px',
         'transition': '.3s',
