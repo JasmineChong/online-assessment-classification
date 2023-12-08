@@ -38,8 +38,8 @@ custom_tab_styles = {
 
 with st.sidebar:
     tabs = on_hover_tabs(
-        tabName=['Home Page', 'Exploratory Data Analysis', 'About', 'Documentation'],
-        iconName=['dashboard', 'money', '', 'economy', ''],
+        tabName=['Home', 'Exploratory Data Analysis', 'About', 'Documentation'],
+        iconName=['home', 'insert_chart', 'info', 'description'],
         default_choice=0,
         styles=custom_tab_styles,
         key='1'
@@ -451,7 +451,7 @@ def classification_model(df):
 
 
 # Individual tabs
-if tabs =='Home Page':
+if tabs =='Home':
     st.title('Online Assessment(s) Personalisation')
     st.write('Fill in the questionnaire below:')
     responses_df = questions()
@@ -466,11 +466,24 @@ if tabs =='Home Page':
     
 
 elif tabs == 'Exploratory Data Analysis':
-    st.title('Graphs')
-    st.write('Visual elements')
+    st.title('Exploratory Data Analysis')
+#     st.write('Visual elements')
+    # Tableau Public embed code
+    tableau_embed_code_demographic = """
+    <div class='tableauPlaceholder' id='viz1702047201422' style='position: relative'><noscript><a href='#'><img alt='Dashboard 1 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;DS&#47;DSP-Demographics&#47;Dashboard1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='DSP-Demographics&#47;Dashboard1' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;DS&#47;DSP-Demographics&#47;Dashboard1&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1702047201422');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else { vizElement.style.width='100%';vizElement.style.height='1427px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+"""
+    # Embed Tableau Public visualization in Streamlit app
+    st.components.v1.html(tableau_embed_code_demographic, height=600)
+    
+    # Tableau Public embed code
+    tableau_embed_code_assessment = """
+    <div class='tableauPlaceholder' id='viz1702046913809' style='position: relative'><noscript><a href='#'><img alt='Dashboard 2 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;DS&#47;DSP-Assessment-Preference&#47;Dashboard2&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='DSP-Assessment-Preference&#47;Dashboard2' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;DS&#47;DSP-Assessment-Preference&#47;Dashboard2&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1702046913809');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else { vizElement.style.width='100%';vizElement.style.height='727px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+"""
+    # Embed Tableau Public visualization in Streamlit app
+    st.components.v1.html(tableau_embed_code_assessment, height=600)
 
 elif tabs == 'About':
-    st.title('Curious to know what is your learning style?')
+    st.title('Curious to know which assessment method is best for you based on your learning style?')
     
     st.header('What is learning style?')
     st.write('''Learning style influences how learners prefer to receive and process information. According to Dag and Gecer (2009), “Learning Style” refers to the learning ways or preferences which are used to learn or remember new knowledge by the learner. For example, visual learners may excel better in assessments that involve diagramming whereas auditory learners may excel better in oral assessments while kinesthetic learners may excel better in hands-on practicals.''')
@@ -485,5 +498,13 @@ elif tabs == 'About':
     
 elif tabs == 'Documentation':
     st.title('Documentation')
-    st.write('Brief overview of each tab\'s content')
+#     st.write('An overview of the content')
+    st.header('Home')
+    st.write('The Home page is where a questionnaire is prepared for user to answer to find out which online assessment tools are best suited for them. There is a total of 33 questions for user to answer and it will take around 10 minutes to complete answering. After completion, the user\'s responses will be saved and passed into a trained classification model to predict the best assessment tool(s) for the user. The result of the model will be displayed shortly after the \'Submit\' button has been click on the same page.')
+    st.header('Exploratory Data Analysis')
+    st.write('The Exploratory Data Analysis page is to display descriptive analysis of the dataset used to trained the model. It gives an overview of the demographics and the preferred online assessment tools for visual, auditory and kinesthetic learners.')
+    st.header('About')
+    st.write('The About page gives user a more comprehensive understanding on what is learning style and how does ones learning style relates to assessment method.')
+    st.header('Documentation')
+    st.write('The Documentation page provides a brief overview of what each tab contains.')
     
