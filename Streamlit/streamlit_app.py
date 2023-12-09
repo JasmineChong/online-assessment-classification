@@ -1,5 +1,6 @@
 
 from st_on_hover_tabs import on_hover_tabs
+from PIL import Image
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -7,7 +8,7 @@ import joblib
 
 st.set_page_config(layout='wide')
 
-st.header('Welcome to ..!')
+st.header('Welcome to Assessifier!')
 st.markdown('<style>' + open('./style.css').read() + '</style>', unsafe_allow_html=True)
 
 
@@ -141,7 +142,7 @@ def questions():
                                                      'I give them a hug or a handshake']
     }
     
-    st.subheader('VAK Questions:')
+    st.subheader('The VAK Learning Styles Questions:')
     for question, options in vak_questions.items():
         selected_option = st.radio(question, options)
         responses_dict['Question'].append(question)
@@ -444,16 +445,17 @@ def classification_model(df):
     st.session_state.csv_exists = True
     
     # Display the content in a list
-    st.header("Best Online Assessment(s):")
+    st.header("Best Online Assessment Tool(s):")
     for i, assessment in enumerate(final_df, start=1):
-        st.text(f"{i}. {assessment}")
+#         st.text(f"{i}. {assessment}")
+        st.write(f"- {assessment}")
 
 
 
 # Individual tabs
 if tabs =='Home':
-    st.title('Online Assessment(s) Personalisation')
-    st.write('Fill in the questionnaire below:')
+    st.title('Curious to know which assessment method is best for you based on your learning style?')
+    st.write('Fill in the questionnaire now!')
     responses_df = questions()
     # Check if the DataFrame is not None before performing other functions to ensure the questions() is being called first
     if responses_df is not None:
@@ -462,12 +464,32 @@ if tabs =='Home':
 #         encoded_df = encode_responses(responses_vak_df)
         # Call the trained classification model function to make prediction
         if responses_vak_df is not None:
+            # Convert the Dominant_VAK data to a list for point form
+            points_list = responses_df['Dominant_VAK'].tolist()
+
+            # Display the dominant VAK
+            st.header("Dominant Learning Style:")
+            for point in points_list:
+                st.write(f"- {point}")
+                if point == 'Visual':
+                    # Load the image
+                    image = Image.open("Images/visual.png")
+                elif point == 'Auditory':
+                    # Load the image
+                    image = Image.open("Images/auditory.png")
+                elif point == 'Kinesthetic':
+                    # Load the image
+                    image = Image.open("Images/kinesthetic.png")
+                # Display the image with custom width and height
+                st.image(image, caption='Source: Freepik', use_column_width="always")
+                
             classification_model(responses_vak_df)
     
 
 elif tabs == 'Exploratory Data Analysis':
     st.title('Exploratory Data Analysis')
-#     st.write('Visual elements')
+    st.write('Below features the descriptive analyses of the dataset utilized for model training, presented through dashboards. It provides insights into demographics and the preferred online assessment tools for visual, auditory and kinesthetic learners.')
+    st.write('\n')
     # Tableau Public embed code
     tableau_embed_code_demographic = """
     <div class='tableauPlaceholder' id='viz1702047201422' style='position: relative'><noscript><a href='#'><img alt='Dashboard 1 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;DS&#47;DSP-Demographics&#47;Dashboard1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='DSP-Demographics&#47;Dashboard1' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;DS&#47;DSP-Demographics&#47;Dashboard1&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1702047201422');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else { vizElement.style.width='100%';vizElement.style.height='1427px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
@@ -483,28 +505,55 @@ elif tabs == 'Exploratory Data Analysis':
     st.components.v1.html(tableau_embed_code_assessment, height=600)
 
 elif tabs == 'About':
-    st.title('Curious to know which assessment method is best for you based on your learning style?')
+    st.title('About')
     
     st.header('What is learning style?')
-    st.write('''Learning style influences how learners prefer to receive and process information. According to Dag and Gecer (2009), “Learning Style” refers to the learning ways or preferences which are used to learn or remember new knowledge by the learner. For example, visual learners may excel better in assessments that involve diagramming whereas auditory learners may excel better in oral assessments while kinesthetic learners may excel better in hands-on practicals.''')
+    st.write('''Learning style influences **how learners prefer to receive and process information**. According to Dag and Gecer (2009), “Learning Style” refers to the learning ways or preferences which are used to learn or remember new knowledge by the learner. For example, visual learners may excel better in assessments that involve diagramming whereas auditory learners may excel better in oral assessments while kinesthetic learners may excel better in hands-on practicals.''')
     
-    st.write("""Previous research by Sharp et al.,2008 has established that the VAK learning styles model is the most widely used among the learning style assessment instruments. The VAK learning style uses 3 main sensory receivers to determine a learner’s dominant learning style. They are:""")
+    st.write("""Previous research by Sharp et al.,2008 has established that the **VAK Learning Styles Model**, in which VAK stands for Visual, Auditory, and Kinesthetic, is **the most widely used** among the learning style assessment instruments **to classify the most common ways that people learn**. The **VAK Learning Styles uses 3 main sensory receivers** to determine a learner’s dominant learning style. They are:""")
     numbered_list = ['Sight (Visual)', 'Hearing (Auditory)', 'Movement (Kinesthetic)']
     for i, item in enumerate(numbered_list, start=1):
         st.write(f"{i}. {item}")
         
-    st.header('How do learning style relates to assessment?')
-    st.write("""A research by Wickramasinghe and Hettiarachchi, 2017 explored the relationship among students’ learning styles, assessment methods, and students’ performances. The study aims to identify the learning styles of students and observe how different assessment methods affect their performance. The survey results showed that there is a significant difference in the marks obtained in pre and post-assessments, suggesting that students perform better in assessment methods that align with their learning styles. The study concludes that there is a relationship between students’ learning styles, assessment methods, and their performances""")
+    st.subheader('Watch the video below to learn more about learning style!')
+
+    # Embed YouTube video using HTML code
+    video_html = f'<iframe width="560" height="315" src="https://www.youtube.com/embed/_IopcOwfsoU?si=IGeRv-KntvAqWlzq" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+
+    # Display the embedded video
+    st.markdown(video_html, unsafe_allow_html=True)
+    
+    st.write('\n\n')
+        
+    st.header('How learning style is related to assessment?')
+    st.write("""**A research by Wickramasinghe and Hettiarachchi, 2017 explored the relationship among students’ learning styles, assessment methods, and students’ performances.** The study aims to identify the learning styles of students and observe how different assessment methods affect their performance. The survey results showed that there is a significant difference in the marks obtained in pre and post-assessments, suggesting that **students perform better in assessment methods that align with their learning styles. The study concludes that there is a relationship between students’ learning styles, assessment methods and their performances.**""")
+    # Display link to the research paper
+    st.markdown('[Read the Research Paper](https://www.researchgate.net/publication/316643710_Relationship_among_students\'_learning_styles_assessment_methods_and_students\'_performances)')
     
 elif tabs == 'Documentation':
     st.title('Documentation')
-#     st.write('An overview of the content')
-    st.header('Home')
-    st.write('The Home page is where a questionnaire is prepared for user to answer to find out which online assessment tools are best suited for them. There is a total of 33 questions for user to answer and it will take around 10 minutes to complete answering. After completion, the user\'s responses will be saved and passed into a trained classification model to predict the best assessment tool(s) for the user. The result of the model will be displayed shortly after the \'Submit\' button has been click on the same page.')
-    st.header('Exploratory Data Analysis')
-    st.write('The Exploratory Data Analysis page is to display descriptive analysis of the dataset used to trained the model. It gives an overview of the demographics and the preferred online assessment tools for visual, auditory and kinesthetic learners.')
-    st.header('About')
-    st.write('The About page gives user a more comprehensive understanding on what is learning style and how does ones learning style relates to assessment method.')
-    st.header('Documentation')
+    
+    st.header('Quick Guide')
+    steps_list = [
+        'Click on the ‘Home’ tab to answer the questionnaire to identify your learning style and the online assessment tools that are best for you.', 
+        'Click on the ‘Exploratory Data Analysis’ tab to see the preferred online assessment tools for most visual, auditory and kinesthetic learners.', 
+        'Click on the ‘About’ tab to learn more about learning style and how learning style is related to assessment.',
+        'Click on the ‘Documentation’ tab to view a brief functionality of the website and it is where you access the user manual document.']
+    for i, item in enumerate(steps_list, start=1):
+        st.write(f"{i}. {item}")
+    
+    # Display a link with custom text
+    st.markdown('[Click here for a detailed user manual](https://docs.google.com/document/d/1fpi2nS_uHRcyqF-JSOt0kUWTns3av-IkE24wZRxoftA/edit?usp=sharing)')
+    
+    st.subheader('Home')
+    st.write('The Home page contains a questionnaire for users to answer to find out their dominant learning style and which online assessment tools are best suited for them. There are a total of 33 questions for users to answer and it will take around 10 minutes to complete answering. The results will be displayed shortly on the same page after the \'Submit\' button has been clicked.')
+    
+    st.subheader('Exploratory Data Analysis')
+    st.write('The Exploratory Data Analysis page contains the descriptive analysis of the dataset used to train the model. It gives an overview of the demographics and the preferred online assessment tools for visual, auditory and kinesthetic learners.')
+    
+    st.subheader('About')
+    st.write('The About page contains information that provides users with a more comprehensive understanding of what learning style is and how learning style relates to assessment methods.')
+    
+    st.subheader('Documentation')
     st.write('The Documentation page provides a brief overview of what each tab contains.')
     
